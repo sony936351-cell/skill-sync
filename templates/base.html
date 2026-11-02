@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+          
+    <title>
+        {% block title %}SkillSync{% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="app-layout">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <a href="{{ url_for('dashboard') }}" class="brand">
+
+            <span class="brand-mark">S</span>
+
+            <span>
+                Skill<span class="brand-accent">Sync</span>
+            </span>
+
+        </a>
+
+
+        <div class="sidebar-caption">
+            WORKSPACE
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+
+                <span class="nav-icon">⌂</span>
+
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('profile') }}"
+                class="nav-link {% if request.endpoint == 'profile' %}active{% endif %}">
+
+                <span class="nav-icon">♙</span>
+
+                <span>My Profile</span>
+
+
+            <!-- Separate Skill Match icon -->
+
+            <a
+                href="{{ url_for('skill_match') }}"
+                class="nav-link {% if request.endpoint == 'skill_match' %}active{% endif %}">
+
+                <span class="nav-icon">⌕</span>
+
+                <span>Skill Match</span>
+
+                <span class="nav-pill">NEW</span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('projects') }}"
+                class="nav-link {% if request.endpoint in ['projects', 'create_project', 'project_detail'] %}active{% endif %}">
+
+                <span class="nav-icon">▧</span>
+
+                <span>Projects</span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('invitations') }}"
+                class="nav-link {% if request.endpoint in ['invitations', 'respond_invitation'] %}active{% endif %}">
+
+                <span class="nav-icon">✉</span>
+
+                <span>Invitations</span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('projects') }}"
+                class="nav-link {% if request.endpoint == 'project_messages' %}active{% endif %}">
+
+                <span class="nav-icon">☏</span>
+
+                <span>Team Messages</span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('assessment') }}"
+                class="nav-link {% if request.endpoint == 'assessment' %}active{% endif %}">
+
+                <span class="nav-icon">✓</span>
+
+                <span>Skill Assessment</span>
+
+            </a>
+
+
+        </nav>
+
+
+        <!-- Sidebar bottom -->
+
+        <div class="sidebar-bottom">
+
+            <div class="sidebar-tip">
+
+                <div class="tip-icon">✦</div>
+
+                <h4>Build your dream team</h4>
+
+                <p>
+                    Find talented teammates and bring your
+                    project ideas to life.
+                </p>
+
+            </div>
+
+
+            <!-- Your existing logout route uses POST -->
+
+            <form
+                method="POST"
+                action="{{ url_for('logout') }}">
+
+                <button type="submit"
+                        class="nav-link logout-button">
+
+                    <span class="nav-icon">↪</span>
+
+                    <span>Log Out</span>
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+
+        <header class="topbar">
+
+            <div>
+
+                <span class="topbar-label">
+                    STUDENT WORKSPACE
+                </span>
+
+                <p>
+                    Discover. Collaborate. Build.
+                </p>
+
+            </div>
+
+
+            <div class="topbar-user">
+
+                <div class="topbar-avatar">
+                    S
+                </div>
+
+                <span>Student Workspace</span>
+
+            </div>
+
+        </header>
+
+
+
+        <div class="content-wrapper">
+
+
+            <!-- Flash messages -->
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+
+                {% if messages %}
+
+                    {% for category, message in messages %}
+
+                        <div class="flash-message {{ category }}">
+
+                            {{ message }}
+
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            {% endwith %}
+
+
+
+            <!-- Individual page content -->
+
+            {% block content %}
+
+            {% endblock %}
+
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

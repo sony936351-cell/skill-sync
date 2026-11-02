@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Project Messages | SkillSync{% endblock %}
+
+{% block content %}
+
+<section class="page-heading">
+    <h1>Project Messages</h1>
+
+    <p>
+        Project: {{ project['title'] }}
+    </p>
+</section>
+
+<div class="card">
+
+    <h2>Send a Message</h2>
+
+    {% set other_members = members
+        |rejectattr('id', 'equalto', student['id'])
+        |list
+    %}
+
+    {% if other_members %}
+
+        <form method="POST">
+
+            <label for="receiver_id">Send to</label>
+
+            <select id="receiver_id" name="receiver_id" required>
+
+                {% for member in other_members %}
+
+                    <option value="{{ member['id'] }}">
+                        {{ member['name'] }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+            <label for="body">Message</label>
+
+            <textarea
+                id="body"
+                name="body"
+                maxlength="2000"
+                required
+            ></textarea>
+
+            <button type="submit" class="btn">
+                Send Message
+            </button>
+
+        </form>
+
+    {% else %}
+
+        <p>
+            No other team members are available for messaging.
+        </p>
+
+    {% endif %}
+
+</div>
+
+<div class="card">
+
+    <h2>Conversation</h2>
+
+    {% for message in messages %}
+
+        <div class="message-row">
+
+            <strong>{{ message['sender_name'] }}</strong>
+
+            <span class="muted">
+                to {{ message['receiver_name'] }}
+            </span>
+
+            <p>{{ message['body'] }}</p>
+
+            <small>{{ message['created_at'] }}</small>
+
+        </div>
+
+    {% else %}
+
+        <p>No messages yet.</p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Invitations | SkillSync{% endblock %}
+
+{% block content %}
+
+<section class="page-heading">
+    <h1>Team Invitations</h1>
+
+    <p>
+        Review invitations and manage your project participation.
+    </p>
+</section>
+
+<div class="card">
+
+    <h2>Received Invitations</h2>
+
+    {% for invitation in received %}
+
+        <div class="invitation-row">
+
+            <div>
+                <h3>{{ invitation['title'] }}</h3>
+
+                <p>
+                    Invited by {{ invitation['sender_name'] }}
+                </p>
+
+                <span class="status">
+                    {{ invitation['status'] }}
+                </span>
+            </div>
+
+            {% if invitation['status'] == 'Pending' %}
+
+                <div class="button-row">
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('respond_invitation',
+                                          invitation_id=invitation['id']) }}"
+                    >
+                        <button
+                            type="submit"
+                            name="response"
+                            value="Accepted"
+                            class="btn"
+                        >
+                            Accept
+                        </button>
+                    </form>
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('respond_invitation',
+                                          invitation_id=invitation['id']) }}"
+                    >
+                        <button
+                            type="submit"
+                            name="response"
+                            value="Rejected"
+                            class="btn btn-danger"
+                        >
+                            Reject
+                        </button>
+                    </form>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    {% else %}
+
+        <p>You have not received any invitations.</p>
+
+    {% endfor %}
+
+</div>
+
+<div class="card">
+
+    <h2>Sent Invitations</h2>
+
+    {% for invitation in sent %}
+
+        <div class="invitation-row">
+
+            <div>
+                <strong>{{ invitation['title'] }}</strong>
+
+                <p>
+                    Sent to {{ invitation['receiver_name'] }}
+                </p>
+            </div>
+
+            <span class="status">
+                {{ invitation['status'] }}
+            </span>
+
+        </div>
+
+    {% else %}
+
+        <p>You have not sent any invitations.</p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Home | SkillSync{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <div class="hero-content">
+        <span class="eyebrow">SMART CAMPUS COLLABORATION</span>
+
+        <h1>Find the right people.<br>Build something meaningful.</h1>
+
+        <p>
+            SkillSync helps students discover project opportunities
+            and find teammates based on their technical skills,
+            interests, and project requirements.
+        </p>
+
+        {% if session.get('user_id') %}
+            <a href="{{ url_for('dashboard') }}" class="btn">
+                Open Dashboard
+            </a>
+        {% else %}
+            <a href="{{ url_for('register') }}" class="btn">
+                Get Started
+            </a>
+
+            <a href="{{ url_for('login') }}" class="btn btn-outline">
+                Student Login
+            </a>
+        {% endif %}
+    </div>
+</section>
+
+<section class="feature-grid">
+
+    <article class="card">
+        <div class="feature-icon">01</div>
+        <h3>Smart Matching</h3>
+        <p>
+            Discover students whose skills align with your
+            project's requirements.
+        </p>
+    </article>
+
+    <article class="card">
+        <div class="feature-icon">02</div>
+        <h3>Skill Profiles</h3>
+        <p>
+            Create a profile containing your technical skills,
+            interests, and availability.
+        </p>
+    </article>
+
+    <article class="card">
+        <div class="feature-icon">03</div>
+        <h3>Team Collaboration</h3>
+        <p>
+            Send invitations, manage responses, and exchange
+            messages with accepted team members.
+        </p>
+    </article>
+
+</section>
+
+{% if error_message %}
+    <div class="alert error">
+        {{ error_message }}
+    </div>
+{% endif %}
+
+{% endblock %}

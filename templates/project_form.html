@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Create Project | SkillSync{% endblock %}
+
+{% block content %}
+
+<div class="form-card wide-card">
+
+    <h1>Create a New Project</h1>
+
+    <p class="muted">
+        Describe your project so SkillSync can identify relevant skills.
+    </p>
+
+    <form method="POST">
+
+        <label for="title">Project title</label>
+
+        <input
+            id="title"
+            name="title"
+            maxlength="150"
+            placeholder="AI-Based Campus Assistant"
+            required
+        >
+
+        <label for="description">Project description</label>
+
+        <textarea
+            id="description"
+            name="description"
+            maxlength="5000"
+            placeholder="Describe the problem, proposed solution, and technologies..."
+            required
+        ></textarea>
+
+        <label for="required_skills">
+            Additional required skills
+        </label>
+
+        <input
+            id="required_skills"
+            name="required_skills"
+            placeholder="Python, Flask, SQL"
+        >
+
+        <small>
+            You can add skills manually if the parser does not detect them.
+        </small>
+
+        <label for="team_size">Desired team size</label>
+
+        <input
+            id="team_size"
+            type="number"
+            name="team_size"
+            min="2"
+            max="20"
+            value="4"
+            required
+        >
+
+        <button type="submit" class="btn">
+            Create Project
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

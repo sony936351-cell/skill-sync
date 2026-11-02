@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Register | SkillSync{% endblock %}
+
+{% block content %}
+
+<div class="form-card">
+    <h1>Create your account</h1>
+
+    <p class="muted">
+        Join SkillSync and start finding project teammates.
+    </p>
+
+    <form method="POST">
+
+        <label for="name">Full name</label>
+
+        <input
+            id="name"
+            type="text"
+            name="name"
+            maxlength="100"
+            required
+        >
+
+        <label for="email">Email address</label>
+
+        <input
+            id="email"
+            type="email"
+            name="email"
+            maxlength="254"
+            required
+        >
+
+        <label for="password">Password</label>
+
+        <input
+            id="password"
+            type="password"
+            name="password"
+            minlength="8"
+            required
+        >
+
+        <button type="submit" class="btn full-width">
+            Create Account
+        </button>
+
+    </form>
+
+    <p class="form-footer">
+        Already registered?
+        <a href="{{ url_for('login') }}">Login</a>
+    </p>
+</div>
+
+{% endblock %}

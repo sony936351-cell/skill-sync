@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project['title'] }} | SkillSync{% endblock %}
+
+{% block content %}
+
+<!-- PROJECT HEADER -->
+<section class="page-heading">
+
+    <span class="eyebrow">PROJECT DETAILS</span>
+
+    <h1>{{ project['title'] }}</h1>
+
+    <p>{{ project['description'] }}</p>
+
+    <p class="muted">
+        Created by {{ project['owner_name'] }}
+    </p>
+
+</section>
+
+
+<!-- PROJECT REQUIREMENTS -->
+<div class="card">
+
+    <h2>Project Requirements</h2>
+
+    <p>
+        <strong>Required skills:</strong>
+        {{ project['required_skills'] or 'Not specified' }}
+    </p>
+
+    <p>
+        <strong>Desired team size:</strong>
+        {{ project['team_size'] }}
+    </p>
+
+    <a
+        href="{{ url_for('project_messages', project_id=project['id']) }}"
+        class="btn"
+    >
+        Open Messages
+    </a>
+
+</div>
+
+
+<!-- CURRENT TEAM -->
+<div class="card">
+
+    <h2>Current Team</h2>
+
+    {% for member in members %}
+
+        <div class="member-row">
+
+            <div>
+
+                <strong>{{ member['name'] }}</strong>
+
+                <p class="muted">
+                    {{ member['skills'] or 'Skills not added' }}
+                </p>
+
+            </div>
+
+        </div>
+
+    {% else %}
+
+        <p>No team members have joined yet.</p>
+
+    {% endfor %}
+
+</div>
+
+
+<!-- RECOMMENDED TEAMMATES -->
+{% if project['owner_id'] == student['id'] %}
+
+    <section class="page-heading">
+
+        <h2>Recommended Teammates</h2>
+
+        <p>
+            Students are ranked according to how well their skills
+            match the project's requirements.
+        </p>
+
+    </section>
+
+
+    <div class="project-grid">
+
+        {% for item in recommendations %}
+
+            {% set recommended_student = item['student'] %}
+
+            <article class="card">
+
+                <!-- STUDENT NAME -->
+                <h3>
+                    {{ recommended_student.get('name', 'Unknown Student') }}
+                </h3>
+
+
+                <!-- MATCH SCORE -->
+                <div class="match-score">
+                    {{ item.get('score', 0) }}%
+                </div>
+
+                <p class="muted">
+                    Skill match
+                </p>
+
+
+                <!-- STUDENT SKILLS -->
+                <p>
+                    <strong>Skills:</strong>
+                    {{ recommended_student.get('skills') or 'Not specified' }}
+                </p>
+
+
+                <!-- MATCHED SKILLS -->
+                <p>
+                    <strong>Matching skills:</strong>
+
+                    {% if item.get('matched') %}
+
+                        {{ item['matched'] | join(', ') }}
+
+                    {% else %}
+
+                        None
+
+                    {% endif %}
+
+                </p>
+
+
+                <!-- MISSING SKILLS -->
+                <p>
+                    <strong>Missing skills:</strong>
+
+                    {% if item.get('missing') %}
+
+                        {{ item['missing'] | join(', ') }}
+
+                    {% else %}
+
+                        None
+
+                    {% endif %}
+
+                </p>
+
+
+                <!-- AVAILABILITY -->
+                <p>
+                    <strong>Availability:</strong>
+                    {{ recommended_student.get('availability') or 'Not specified' }}
+                </p>
+
+
+                <!-- INVITATION STATUS -->
+                {% if item.get('invitation_status') == 'Accepted' %}
+
+                    <p class="muted">
+                        This student has already joined the team.
+                    </p>
+
+                {% elif item.get('invitation_status') == 'Pending' %}
+
+                    <p class="muted">
+                        Invitation already sent.
+                    </p>
+
+                {% else %}
+
+                    <!-- SEND INVITATION -->
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'invite_student',
+                            project_id=project['id'],
+                            receiver_id=recommended_student['id']
+                        ) }}"
+                    >
+
+                        <button type="submit" class="btn">
+                            Invite Student
+                        </button>
+
+                    </form>
+
+                {% endif %}
+
+            </article>
+
+        {% else %}
+
+            <div class="card">
+
+                <p>
+                    No additional teammates are recommended.
+                </p>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endif %}
+
+{% endblock %}

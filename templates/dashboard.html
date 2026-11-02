@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | SkillSync{% endblock %}
+
+{% block content %}
+
+<section class="page-heading">
+    <span class="eyebrow">YOUR WORKSPACE</span>
+
+    <h1>Hello, {{ student['name'] }}!</h1>
+
+    <p>
+        Explore projects and discover your next collaboration.
+    </p>
+</section>
+
+<section class="stats-grid">
+
+    <div class="stat-card">
+        <span>Projects Created</span>
+        <h2>{{ my_projects }}</h2>
+    </div>
+
+    <div class="stat-card">
+        <span>Pending Invitations</span>
+        <h2>{{ pending }}</h2>
+    </div>
+
+    <div class="stat-card">
+        <span>Your Availability</span>
+        <h2 class="stat-label">{{ student['availability'] }}</h2>
+    </div>
+
+</section>
+
+<div class="section-heading">
+    <h2>Latest Projects</h2>
+
+    <a href="{{ url_for('projects') }}" class="text-link">
+        View all
+    </a>
+</div>
+
+<div class="project-grid">
+
+    {% for project in projects %}
+
+        <article class="card project-card">
+
+            <span class="project-label">STUDENT PROJECT</span>
+
+            <h3>{{ project['title'] }}</h3>
+
+            <p>{{ project['description']|truncate(180) }}</p>
+
+            <p class="muted">
+                Created by {{ project['owner_name'] }}
+            </p>
+
+            <p>
+                <strong>Skills:</strong>
+                {{ project['required_skills'] or 'Not specified' }}
+            </p>
+
+            <a
+                href="{{ url_for('project_detail',
+                                project_id=project['id']) }}"
+                class="btn"
+            >
+                View Project
+            </a>
+
+        </article>
+
+    {% else %}
+
+        <div class="card">
+            <h3>No projects yet</h3>
+
+            <p>Be the first to create a project.</p>
+
+            <a href="{{ url_for('create_project') }}" class="btn">
+                Create Project
+            </a>
+        </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

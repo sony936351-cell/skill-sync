@@ -1,0 +1,724 @@
+{% extends "base.html" %}
+
+{% block title %}Skill Match | SkillSync{% endblock %}
+
+{% block content %}
+
+<style>
+    .page-heading {
+        margin-bottom: 28px;
+    }
+
+    .eyebrow {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        color: #6c63ff;
+        margin-bottom: 10px;
+    }
+
+    .page-heading h1 {
+        margin: 0 0 10px;
+        font-size: 32px;
+    }
+
+    .page-heading p {
+        color: #777;
+        line-height: 1.6;
+    }
+
+    .match-banner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        padding: 32px;
+        margin-bottom: 28px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #6258e8, #9188ff);
+        color: white;
+    }
+
+    .banner-content {
+        max-width: 650px;
+    }
+
+    .banner-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        opacity: 0.9;
+    }
+
+    .banner-content h2 {
+        margin: 12px 0;
+        font-size: 27px;
+    }
+
+    .banner-content p {
+        margin-bottom: 0;
+        line-height: 1.7;
+        opacity: 0.95;
+    }
+
+    .banner-icon {
+        font-size: 65px;
+        opacity: 0.8;
+    }
+
+    .match-controls {
+        padding: 24px;
+        margin-bottom: 30px;
+        background: #fff;
+        border: 1px solid #e9e9f2;
+        border-radius: 14px;
+    }
+
+    .match-controls label {
+        display: block;
+        margin-bottom: 12px;
+        font-weight: 700;
+    }
+
+    .filter-row {
+        display: flex;
+        gap: 12px;
+    }
+
+    .filter-row select {
+        flex: 1;
+        min-width: 0;
+        padding: 12px;
+        border: 1px solid #d9d9e5;
+        border-radius: 8px;
+        background: white;
+        font-size: 14px;
+    }
+
+    .primary-button,
+    .secondary-button {
+        display: inline-block;
+        padding: 12px 18px;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+        cursor: pointer;
+        transition: opacity 0.2s ease;
+    }
+
+    .primary-button {
+        background: #675df5;
+        color: white;
+    }
+
+    .secondary-button {
+        background: #e8e7ff;
+        color: #5146c7;
+    }
+
+    .primary-button:hover,
+    .secondary-button:hover {
+        opacity: 0.85;
+    }
+
+    .results-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .results-heading h2 {
+        margin: 0;
+        font-size: 24px;
+    }
+
+    .result-count {
+        padding: 8px 12px;
+        border-radius: 20px;
+        background: #efeeff;
+        color: #6258e8;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .candidate-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 22px;
+    }
+
+    .candidate-card {
+        min-width: 0;
+        padding: 22px;
+        border: 1px solid #e9e9f2;
+        border-radius: 15px;
+        background: white;
+        box-shadow: 0 4px 15px rgba(20, 20, 50, 0.04);
+    }
+
+    .candidate-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+
+    .avatar {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #eeecff;
+        color: #6258e8;
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .candidate-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .candidate-info h3 {
+        margin: 0 0 5px;
+        font-size: 16px;
+        overflow-wrap: anywhere;
+    }
+
+    .candidate-info p {
+        margin: 0;
+        color: #777;
+        font-size: 12px;
+        overflow-wrap: anywhere;
+    }
+
+    .match-badge {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex-shrink: 0;
+        padding: 8px;
+        border-radius: 10px;
+        background: #e8f8ef;
+        color: #18864b;
+    }
+
+    .match-badge strong {
+        font-size: 19px;
+    }
+
+    .match-badge span {
+        font-size: 10px;
+    }
+
+    .progress-track {
+        height: 8px;
+        margin-bottom: 24px;
+        overflow: hidden;
+        border-radius: 10px;
+        background: #eeeef5;
+    }
+
+    .progress-fill {
+        width: 0;
+        height: 100%;
+        border-radius: 10px;
+        background: linear-gradient(90deg, #6258e8, #8d83ff);
+        transition: width 0.5s ease;
+    }
+
+    .skill-section {
+        margin-bottom: 22px;
+    }
+
+    .skill-section h4 {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 12px;
+        font-size: 14px;
+    }
+
+    .status-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+
+    .matched-dot {
+        background: #24a865;
+    }
+
+    .missing-dot {
+        background: #ed9b36;
+    }
+
+    .skill-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .skill-tag {
+        display: inline-block;
+        padding: 7px 10px;
+        border-radius: 7px;
+        font-size: 12px;
+        overflow-wrap: anywhere;
+    }
+
+    .skill-tag.matched {
+        background: #e8f8ef;
+        color: #18864b;
+    }
+
+    .skill-tag.missing {
+        background: #fff3e5;
+        color: #a86412;
+    }
+
+    .muted-text {
+        color: #888;
+        font-size: 13px;
+    }
+
+    .availability-info {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 0;
+        margin-bottom: 14px;
+        border-top: 1px solid #eeeef5;
+        border-bottom: 1px solid #eeeef5;
+        font-size: 13px;
+    }
+
+    .availability-info span {
+        color: #777;
+    }
+
+    .availability-info strong {
+        text-align: right;
+        overflow-wrap: anywhere;
+    }
+
+    .candidate-footer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .match-caption {
+        color: #777;
+        font-size: 12px;
+    }
+
+    .candidate-footer form {
+        margin: 0;
+    }
+
+    .empty-state {
+        padding: 40px 24px;
+        text-align: center;
+        background: white;
+        border: 1px solid #e9e9f2;
+        border-radius: 15px;
+    }
+
+    .empty-icon {
+        margin-bottom: 12px;
+        color: #675df5;
+        font-size: 42px;
+    }
+
+    .empty-state h3 {
+        margin-bottom: 10px;
+    }
+
+    .empty-state p {
+        margin-bottom: 20px;
+        color: #777;
+        line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+        .match-banner {
+            padding: 22px;
+        }
+
+        .banner-content h2 {
+            font-size: 22px;
+        }
+
+        .banner-icon {
+            font-size: 40px;
+        }
+
+        .filter-row {
+            flex-direction: column;
+        }
+
+        .filter-row .primary-button {
+            width: 100%;
+        }
+
+        .results-heading {
+            align-items: flex-start;
+        }
+
+        .results-heading h2 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+
+<!-- Page heading -->
+
+<section class="page-heading">
+
+    <span class="eyebrow">SMART TEAM BUILDER</span>
+
+    <h1>Find Your Perfect Team</h1>
+
+    <p>
+        Discover talented students, compare their skills,
+        and build your ideal project team.
+    </p>
+
+</section>
+
+
+<!-- Hero banner -->
+
+<section class="match-banner">
+
+    <div class="banner-content">
+
+        <span class="banner-label">
+            INTELLIGENT SKILL MATCHING
+        </span>
+
+        <h2>Great ideas need the right people.</h2>
+
+        <p>
+            Find the skills your project needs and connect
+            with students who can help bring your ideas to life.
+        </p>
+
+    </div>
+
+    <div class="banner-icon">✦</div>
+
+</section>
+
+
+<!-- Project selection -->
+
+<section class="match-controls">
+
+    <form method="GET" action="{{ url_for('skill_match') }}">
+
+        <label for="project_id">Choose Your Project</label>
+
+        <div class="filter-row">
+
+            <select name="project_id" id="project_id" required>
+
+                <option value="" disabled
+                    {% if not selected_project_id %}selected{% endif %}>
+                    Select a project
+                </option>
+
+                {% for project in projects %}
+
+                    <option
+                        value="{{ project.id }}"
+                        {% if selected_project_id == project.id %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ project.title }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+            <button type="submit" class="primary-button">
+                Find Matches →
+            </button>
+
+        </div>
+
+    </form>
+
+</section>
+
+
+<!-- Empty project state -->
+
+{% if not projects %}
+
+    <section class="empty-state">
+
+        <div class="empty-icon">✦</div>
+
+        <h3>No projects available</h3>
+
+        <p>
+            Create your first project and add the skills
+            you need to discover potential teammates.
+        </p>
+
+        <a href="{{ url_for('create_project') }}"
+           class="primary-button">
+            Create Project
+        </a>
+
+    </section>
+
+
+<!-- Matching results -->
+
+{% elif selected_project_id %}
+
+    <section class="results-heading">
+
+        <div>
+
+            <span class="eyebrow">
+                PERSONALIZED RECOMMENDATIONS
+            </span>
+
+            <h2>Recommended Teammates</h2>
+
+        </div>
+
+        <span class="result-count">
+            {{ recommendations|length }} students
+        </span>
+
+    </section>
+
+
+    <div class="candidate-grid">
+
+        {% for candidate in recommendations %}
+
+            <article class="candidate-card">
+
+                <!-- Student information -->
+
+                <div class="candidate-top">
+
+                    <div class="avatar">
+                        {{ candidate.name[:1]|upper }}
+                    </div>
+
+                    <div class="candidate-info">
+
+                        <h3>{{ candidate.name }}</h3>
+
+                        <p>{{ candidate.email }}</p>
+
+                    </div>
+
+                    <div class="match-badge">
+
+                        <strong>{{ candidate.score }}%</strong>
+
+                        <span>Match</span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Match percentage bar -->
+
+                <div class="progress-track">
+
+                    <div
+                        class="progress-fill"
+                        data-score="{{ candidate.score }}">
+                    </div>
+
+                </div>
+
+
+                <!-- Matching skills -->
+
+                <div class="skill-section">
+
+                    <h4>
+                        <span class="status-dot matched-dot"></span>
+                        Matching Skills
+                    </h4>
+
+                    <div class="skill-tags">
+
+                        {% for skill in candidate.matched_skills %}
+
+                            <span class="skill-tag matched">
+                                ✓ {{ skill }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="muted-text">
+                                No matching skills
+                            </span>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Missing skills -->
+
+                <div class="skill-section">
+
+                    <h4>
+                        <span class="status-dot missing-dot"></span>
+                        Missing Required Skills
+                    </h4>
+
+                    <div class="skill-tags">
+
+                        {% for skill in candidate.missing_skills %}
+
+                            <span class="skill-tag missing">
+                                {{ skill }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="skill-tag matched">
+                                All required skills matched!
+                            </span>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Student availability -->
+
+                <div class="availability-info">
+
+                    <span>Availability</span>
+
+                    <strong>
+                        {{ candidate.availability or "Not specified" }}
+                    </strong>
+
+                </div>
+
+
+                <!-- Invitation button -->
+
+                <div class="candidate-footer">
+
+                    <span class="match-caption">
+
+                        {{ candidate.matched_skills|length }}
+                        of
+                        {{ candidate.total_required }}
+                        skills matched
+
+                    </span>
+
+                    {% if candidate.invitation_sent %}
+
+                        <button
+                            class="secondary-button"
+                            type="button"
+                            disabled>
+                            Invitation Sent
+                        </button>
+
+                    {% else %}
+
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'invite_student',
+                                project_id=selected_project_id,
+                                receiver_id=candidate.id
+                            ) }}">
+
+                            <button
+                                type="submit"
+                                class="primary-button">
+                                Invite Teammate →
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+                </div>
+
+            </article>
+
+        {% else %}
+
+            <section class="empty-state">
+
+                <h3>No recommendations yet</h3>
+
+                <p>
+                    Other students need to register and add
+                    their skills before they can appear here.
+                </p>
+
+            </section>
+
+        {% endfor %}
+
+    </div>
+
+{% endif %}
+
+
+<!-- Fix progress bar widths without inline Jinja CSS -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const progressBars = document.querySelectorAll(".progress-fill");
+
+    progressBars.forEach(function (bar) {
+
+        let score = Number(bar.dataset.score);
+
+        if (!Number.isFinite(score)) {
+            score = 0;
+        }
+
+        score = Math.max(0, Math.min(100, score));
+
+        bar.style.width = score + "%";
+
+    });
+
+});
+</script>
+
+{% endblock %}

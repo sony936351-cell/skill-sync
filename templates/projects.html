@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Projects | SkillSync{% endblock %}
+
+{% block content %}
+
+<section class="page-heading">
+    <h1>Explore Projects</h1>
+
+    <p>
+        Discover opportunities to collaborate with other students.
+    </p>
+
+    <a href="{{ url_for('create_project') }}" class="btn">
+        Create New Project
+    </a>
+</section>
+
+<div class="project-grid">
+
+    {% for project in projects %}
+
+        <article class="card project-card">
+
+            <span class="project-label">
+                TEAM SIZE: {{ project['team_size'] }}
+            </span>
+
+            <h2>{{ project['title'] }}</h2>
+
+            <p>{{ project['description'] }}</p>
+
+            <p class="muted">
+                Project owner: {{ project['owner_name'] }}
+            </p>
+
+            <p>
+                <strong>Required skills:</strong>
+                {{ project['required_skills'] or 'Not specified' }}
+            </p>
+
+            <a
+                href="{{ url_for('project_detail',
+                                project_id=project['id']) }}"
+                class="btn"
+            >
+                Explore Project
+            </a>
+
+        </article>
+
+    {% else %}
+
+        <div class="card">
+            <h3>No projects available</h3>
+            <p>Create the first project to get started.</p>
+        </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

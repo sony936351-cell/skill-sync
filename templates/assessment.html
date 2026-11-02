@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Skill Assessment | SkillSync{% endblock %}
+
+{% block content %}
+
+<section class="page-heading">
+    <h1>Skill Assessment</h1>
+
+    <p>
+        Complete a short quiz and record your performance.
+        These quizzes are not formal certifications.
+    </p>
+</section>
+
+<div class="card">
+
+    <form method="GET">
+
+        <label for="topic">Choose a topic</label>
+
+        <select
+            id="topic"
+            name="topic"
+            onchange="this.form.submit()"
+        >
+
+            <option value="">Select topic</option>
+
+            {% for name in quizzes %}
+
+                <option
+                    value="{{ name }}"
+                    {% if topic == name %}
+                        selected
+                    {% endif %}
+                >
+                    {{ name }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+    </form>
+
+    {% if topic %}
+
+        <h2>{{ topic }} Quiz</h2>
+
+        <form method="POST">
+
+            <input type="hidden" name="topic" value="{{ topic }}">
+
+            {% for question in quizzes[topic] %}
+
+                {% set question_index = loop.index0 %}
+
+                <div class="quiz-question">
+
+                    <h3>
+                        {{ loop.index }}.
+                        {{ question['question'] }}
+                    </h3>
+
+                    {% for option in question['options'] %}
+
+                        <label class="radio-option">
+
+                            <input
+                                type="radio"
+                                name="q{{ question_index }}"
+                                value="{{ option }}"
+                                required
+                            >
+
+                            {{ option }}
+
+                        </label>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endfor %}
+
+            <button type="submit" class="btn">
+                Submit Quiz
+            </button>
+
+        </form>
+
+    {% endif %}
+
+</div>
+
+<div class="card">
+
+    <h2>Assessment History</h2>
+
+    {% for result in history %}
+
+        <div class="member-row">
+
+            <div>
+                <strong>{{ result['topic'] }}</strong>
+
+                <p>
+                    Score: {{ result['score'] }}/{{ result['total'] }}
+                </p>
+
+                <p class="muted">
+                    {{ result['created_at'] }}
+                </p>
+            </div>
+
+        </div>
+
+    {% else %}
+
+        <p>No assessments completed yet.</p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}
